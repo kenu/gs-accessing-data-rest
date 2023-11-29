@@ -3,58 +3,66 @@ package com.refactor;
 // code from: https://makolyte.com/refactoring-the-long-method-code-smell/
 public class LongMethod {
 
+  private static final String SULFURAS_HAND_OF_RAGNAROS = "Sulfuras, Hand of Ragnaros";
+  private static final String BACKSTAGE_PASSES_TO_A_TAFKAL80ETC_CONCERT =
+      "Backstage passes to a TAFKAL80ETC concert";
+  private static final int maxQuality = 50;
   private Item[] items;
 
   public void updateQuality() {
     for (var i = 0; i < items.length; i++) {
-      if (!items[i].name.equals("Aged Brie")
-          && items[i].name.equals("Backstage passes to a TAFKAL80ETC concert")) {
-        if (items[i].quality > 0) {
-          if (!items[i].name.equals("Sulfuras, Hand of Ragnaros")) {
-            items[i].quality = items[i].quality - 1;
+      Item item = items[i];
+      boolean isAgedBrie = item.name.equals("Aged Brie");
+      boolean isBackStage = item.name.equals(BACKSTAGE_PASSES_TO_A_TAFKAL80ETC_CONCERT);
+      boolean isSulfuras = item.name.equals(SULFURAS_HAND_OF_RAGNAROS);
+      if (item.quality < maxQuality) {
+        item.quality = item.quality + 1;
+
+        if (isBackStage) {
+          if (!isAgedBrie && item.quality > 0) {
+            decrementOne(i);
           }
-        }
-      } else {
-        if (items[i].quality < 50) {
-          items[i].quality = items[i].quality + 1;
 
-          if (items[i].name.equals("Backstage passes to a TAFKAL80ETC concert")) {
-            if (items[i].sellIn < 11) {
-              if (items[i].quality < 50) {
-                items[i].quality = items[i].quality + 1;
-              }
-            }
+          if (item.sellIn < 11) {
+            incrementOne(i);
+          }
 
-            if (items[i].sellIn < 6) {
-              if (items[i].quality < 50) {
-                items[i].quality = items[i].quality + 1;
-              }
-            }
+          if (item.sellIn < 6) {
+            incrementOne(i);
           }
         }
       }
 
-      if (!items[i].name.equals("Sulfuras, Hand of Ragnaros")) {
-        items[i].sellIn = items[i].sellIn - 1;
+      if (!isSulfuras) {
+        item.sellIn = item.sellIn - 1;
       }
 
-      if (items[i].sellIn < 0) {
-        if (!items[i].name.equals("Aged Brie")) {
-          if (!items[i].name.equals("Backstage passes to a TAFKAL80ETC concert")) {
-            if (items[i].quality > 0) {
-              if (!items[i].name.equals("Sulfuras, Hand of Ragnaros")) {
-                items[i].quality = items[i].quality - 1;
-              }
+      if (item.sellIn < 0) {
+        if (!isAgedBrie) {
+          if (!isBackStage) {
+            if (item.quality > 0) {
+              decrementOne(i);
             }
           } else {
-            items[i].quality = items[i].quality - items[i].quality;
+            item.quality = item.quality - item.quality;
           }
         } else {
-          if (items[i].quality < 50) {
-            items[i].quality = items[i].quality + 1;
-          }
+          incrementOne(i);
         }
       }
+    }
+
+  }
+
+  private void decrementOne(int i) {
+    if (!items[i].name.equals(SULFURAS_HAND_OF_RAGNAROS)) {
+      items[i].quality = items[i].quality - 1;
+    }
+  }
+
+  private void incrementOne(int i) {
+    if (items[i].quality < maxQuality) {
+      items[i].quality = items[i].quality + 1;
     }
   }
 }
