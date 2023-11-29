@@ -7,8 +7,9 @@ public class LongMethod {
 
   public void updateQuality() {
     for (var i = 0; i < items.length; i++) {
-      if (!items[i].name.equals("Aged Brie")
-          && items[i].name.equals("Backstage passes to a TAFKAL80ETC concert")) {
+      boolean isAgedBrie = !items[i].name.equals("Aged Brie")
+		      && items[i].name.equals("Backstage passes to a TAFKAL80ETC concert");
+	if (isAgedBrie) {
         if (items[i].quality > 0) {
           if (!items[i].name.equals("Sulfuras, Hand of Ragnaros")) {
             items[i].quality = items[i].quality - 1;
@@ -20,15 +21,11 @@ public class LongMethod {
 
           if (items[i].name.equals("Backstage passes to a TAFKAL80ETC concert")) {
             if (items[i].sellIn < 11) {
-              if (items[i].quality < 50) {
-                items[i].quality = items[i].quality + 1;
-              }
+              incrementOne(i);
             }
 
             if (items[i].sellIn < 6) {
-              if (items[i].quality < 50) {
-                items[i].quality = items[i].quality + 1;
-              }
+              incrementOne(i);
             }
           }
         }
@@ -50,13 +47,17 @@ public class LongMethod {
             items[i].quality = items[i].quality - items[i].quality;
           }
         } else {
-          if (items[i].quality < 50) {
-            items[i].quality = items[i].quality + 1;
-          }
+          incrementOne(i);
         }
       }
     }
   }
+
+private void incrementOne(int i) {
+	if (items[i].quality < 50) {
+	    items[i].quality = items[i].quality + 1;
+	  }
+}
 }
 
 
